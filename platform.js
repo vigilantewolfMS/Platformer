@@ -2,6 +2,7 @@ let platArray=  [];
 let score=0;
 let bob;
 let jim;
+let counter;
 var bg;
 
 function setup(){
@@ -10,6 +11,7 @@ function setup(){
 	let x = 100;
 	let y = 100;
 	let width = 200;
+	counter = 30;
 	bob = new Platform(x,y,width);
 	jim = new Hero();
 	
@@ -21,15 +23,31 @@ function setup(){
 
 function draw(){
 	background(bg);
+	text(counter,10,10);
 	jim.show();
 	jim.move();
 	bob.show();
+	checkY();
+	checkX();
 	
 
 }
 
 
+function checkY(){
+	
+	if (jim.y > height){
+		
+		counter--;
+		jim.y = 0;
+	}
+}
 
+function checkX(){
+	if (jim.x > width){
+		jim.x = 0;
+	}
+}
 
 
 
@@ -51,6 +69,8 @@ class Hero{
 	
 	move()
 	{
+		if(bob.contains(this.x,this.y))
+			this.y++;
 		if(keyIsDown(LEFT_ARROW))
 			this.x -= 5;
 		if (keyIsDown(RIGHT_ARROW))
@@ -77,5 +97,15 @@ class Platform{
 	show()
 	{
 		rect(this.x, this.y, this.width, this.height);
+	}
+	
+	contains(givenX,givenY){
+		if(givenX > this.x && givenX < this.x+this.width)
+		{
+			if(givenY>this.y && givenY< this.y + this.height){
+			return true
+			}
+		}
+		return false
 	}
 }
