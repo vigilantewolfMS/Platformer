@@ -5,6 +5,7 @@ let jim;
 let counter;
 var bg;
 var heroimg;
+let gravity = 0.2;
 
 function setup(){
 	bg = loadImage ("https://cdn.glitch.com/e7ed6e48-956d-448f-9a5a-c3ea284c1a66%2Fforest%20thing.gif?1511288892529");
@@ -15,7 +16,7 @@ function setup(){
 	counter = 30;
 	bob = new Platform(x,y,width);
 	jim = new Hero();
-	heroimg= loadImage("https://cdn.glitch.com/e7ed6e48-956d-448f-9a5a-c3ea284c1a66%2Fboop.png?1511288158316");
+	heroimg= loadImage("https://cdn.glitch.com/e7ed6e48-956d-448f-9a5a-c3ea284c1a66%2Fboop%20boop.png?1511807582190");
 	
 	
 
@@ -66,22 +67,30 @@ class Hero{
 	
 	show()
 	{
-		image(heroimg, this.x-20, this.y-40);
+		image(heroimg, this.x-20, this.y-28);
 		// ellipse(this.x, this.y, this.width, this.height);
 	}
 	
 	move()
 	{
-		if(bob.contains(this.x,this.y) == false)
-			this.y++;
+		if(bob.contains(this.x,this.y+10) == false){
+			//this.y++;
+			this.Vy += gravity;
+			this.y += this.Vy;
+	}
+	else{
+		//you are touching a platform
+		this.Vy = 0;
+		this.y = bob.y - 10;
+		if (keyIsDown(UP_ARROW)){
+			this.Vy = -5;
+		}
+	}
 		if(keyIsDown(LEFT_ARROW))
 			this.x -= 5;
 		if (keyIsDown(RIGHT_ARROW))
 			this.x += 5;
-		if (keyIsDown(UP_ARROW))
-			this.y -= 5;
-		// if (keyIsDown(DOWN_ARROW))
-			// this.y += 5;
+
 	}
 	
 	
