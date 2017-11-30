@@ -1,22 +1,25 @@
 let platArray=  [];
 let score=0;
-let bob;
 let jim;
 let counter;
 var bg;
 var heroimg;
-let gravity = 0.2;
+let gravity = 0.01;
+
+
+function preload(){
+	bg = loadImage ("https://cdn.glitch.com/e7ed6e48-956d-448f-9a5a-c3ea284c1a66%2Fforest%20thing.gif?1511288892529");
+	heroimg= loadImage("https://cdn.glitch.com/e7ed6e48-956d-448f-9a5a-c3ea284c1a66%2Fboop%20boop.png?1511807582190");
+	}
 
 function setup(){
-	bg = loadImage ("https://cdn.glitch.com/e7ed6e48-956d-448f-9a5a-c3ea284c1a66%2Fforest%20thing.gif?1511288892529");
+	
 	createCanvas(windowWidth,windowHeight);
 	let x = random(windowWidth);
 	let y = random(height);
 	let width = random(40,600);
 	counter = 30;
-	bob = new Platform(x,y,width);
 	jim = new Hero();
-	heroimg= loadImage("https://cdn.glitch.com/e7ed6e48-956d-448f-9a5a-c3ea284c1a66%2Fboop%20boop.png?1511807582190");
 	
 	for(var i = 0;i < 9; i++)
 	{
@@ -36,13 +39,12 @@ function draw(){
 	text(counter,10,10);
 	jim.show();
 	jim.move();
-	bob.show();
 	checkY();
 	checkX();
 	
-	for(var i = 0; i < 9; i++)
+	for(var i = 0; i < 9; i++){
 		platArray[i].show();
-	
+	}
 
 }
 
@@ -53,6 +55,7 @@ function checkY(){
 		
 		counter--;
 		jim.y = 0;
+		jim.Vy = 0;
 	}
 }
 
@@ -85,7 +88,7 @@ class Hero{
 	{
 		for(var i = 0; i < 9; i++){
 			
-			if((platArray[i].contains(this.x,this.y+10) == false){
+			if(platArray[i].contains(this.x,this.y+10) == false){
 				//this.y++;
 				this.Vy += gravity;
 				this.y += this.Vy;
@@ -96,16 +99,18 @@ class Hero{
 				this.Vy = 0;
 				this.y = platArray[i].y - 10;
 				if (keyIsDown(UP_ARROW)){
-				this.Vy = -5;
+					this.Vy = -2;
+				}
 			}
 		}
-
 		if(keyIsDown(LEFT_ARROW))
 			this.x -= 5;
 		if (keyIsDown(RIGHT_ARROW))
 			this.x += 5;
 
 	}
+}
+	
 
 class Platform{
 	constructor(x,y,width){
