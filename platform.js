@@ -1,4 +1,5 @@
 let platArray=  [];
+let coinArray= [];
 let score=0;
 let jim;
 let counter;
@@ -10,6 +11,7 @@ let pwidth = 0;
 let evildood;
 let enemyx;
 let enemyy;
+let coinnumber;
 
 
 function preload(){
@@ -28,11 +30,25 @@ function setup(){
 	BuildPlatforms();
 	endgame();
 	evildood = new enemy(x,y);
+	summoncoins();
 	
 
 	
 	
 
+}
+
+function summoncoins(){
+	coinnumber= random(8,10);
+	coinArray = [];
+	
+	for(var i = 0;i < coinnumber; i++)
+	{
+		let x = random(0, width-5);
+		let y = random(50, height-80);
+		coinArray[i]= new coin(x,y);
+		
+	}
 }
 
 function BuildPlatforms(){
@@ -84,6 +100,12 @@ function draw(){
 			evildood.move();
 		}
 	}
+	
+		for(var i = 0;i < coinArray.length; i++)
+		{
+			coinArray[i].show();
+		
+		}
 
 }
 
@@ -201,10 +223,28 @@ class enemy{
 	}
 	
 	move(){
-		for (var i= 0; i< platArray.length; i++){
-			if(platArray[i].contains(this.x,this.y+10)){
-				this.x += 3
+		
+		for (var i = 0; i > platArray.length ; i++){
+			if(this.x < platArray[i].width)
+			{
+				this.x + 10;
 			}
+			
 		}
 	}
+}
+
+class coin{
+	constructor(){
+		this.x = 50;
+		this.y = 50;
+		this.width = 20;
+		this.height = 20;
+	}
+	
+	show()
+	{
+		ellipse(this.x,this.y,this.width,this.height);
+	}
+	
 }
