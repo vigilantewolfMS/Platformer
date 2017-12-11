@@ -4,7 +4,12 @@ let jim;
 let counter;
 var bg;
 var heroimg;
-let gravity = 0.01;
+let gravity = 0.2;
+let numberplat = 15;
+let pwidth = 0;
+let evildood;
+let enemyx;
+let enemyy;
 
 
 function preload(){
@@ -14,24 +19,50 @@ function preload(){
 
 function setup(){
 	
-	createCanvas(windowWidth,windowHeight);
+	createCanvas(windowWidth-50,windowHeight-10);
 	let x = random(windowWidth);
 	let y = random(height);
 	let width = random(40,600);
-	counter = 30;
+	counter = 1;
 	jim = new Hero();
+	BuildPlatforms();
+	endgame();
+	evildood = new enemy(x,y);
 	
-	for(var i = 0;i < 9; i++)
-	{
-		let x = random(windowWidth);
-		let y = random(height);
-		let width = random(40,600);
-		platArray[i] = new Platform(x,y,width);
-	}
+
+	
 	
 
 }
 
+function BuildPlatforms(){
+	
+	numberplat = random(5,10);
+	platArray= [];
+
+	for(var i = 0;i < numberplat; i++)
+	{
+		let x = random(0,windowWidth/3);
+		let y = random(50,height-80);
+		pwidth = random(40,400);
+		platArray.push(new Platform(x,y,pwidth));
+	}
+	
+		for(var i = 0;i < numberplat; i++)
+	{
+		let x = random(width/3 ,width*.66);
+		let y = random(50,height-80);
+		pwidth = random(40,500);
+		platArray.push(new Platform(x,y,pwidth));
+	}
+		for(var i = 0;i < numberplat; i++)
+	{
+		let x = random(width*.66 ,width-10);
+		let y = random(50,height-80);
+		pwidth = random(40,600);
+		platArray.push(new Platform(x,y,pwidth));
+	}
+}
 
 
 function draw(){
@@ -39,15 +70,29 @@ function draw(){
 	text(counter,10,10);
 	jim.show();
 	jim.move();
+	jim.touchingPlat();
 	checkY();
 	checkX();
 	
-	for(var i = 0; i < 9; i++){
+	for(var i = 0; i < platArray.length; i++){
 		platArray[i].show();
+		
+		if (i< 3){
+			evildood.x = platArray[i].x;
+			evildood.y = platArray[i].y;
+			evildood.show();
+			evildood.move();
+		}
 	}
 
 }
 
+
+function endgame(){
+	if (counter = 0){
+		Noloop();
+	}
+}
 
 function checkY(){
 	
@@ -56,12 +101,15 @@ function checkY(){
 		counter--;
 		jim.y = 0;
 		jim.Vy = 0;
+		BuildPlatforms();
 	}
 }
 
 function checkX(){
 	if (jim.x > width){
 		jim.x = 0;
+		BuildPlatforms();
+		counter++;
 	}
 }
 
@@ -84,31 +132,32 @@ class Hero{
 		// ellipse(this.x, this.y, this.width, this.height);
 	}
 	
-	move()
-	{
-		for(var i = 0; i < 9; i++){
-			
-			if(platArray[i].contains(this.x,this.y+10) == false){
-				//this.y++;
-				this.Vy += gravity;
-				this.y += this.Vy;
-			}
-			
-			else{
+	touchingPlat(){
+		for (var i= 0; i< platArray.length; i++){
+			if(platArray[i].contains(this.x,this.y+10)){
 				//you are touching a platform
 				this.Vy = 0;
 				this.y = platArray[i].y - 10;
 				if (keyIsDown(UP_ARROW)){
-					this.Vy = -2;
+					this.Vy = -8;
 				}
+				
+				return true;
 			}
+			
 		}
+	}
+	move()
+	{
+		//this.y++;
+		this.Vy += gravity;
+		this.y += this.Vy;
 		if(keyIsDown(LEFT_ARROW))
 			this.x -= 5;
+		
 		if (keyIsDown(RIGHT_ARROW))
 			this.x += 5;
-
-	}
+    }
 }
 	
 
@@ -134,5 +183,28 @@ class Platform{
 			}
 		}
 		return false
+	}
+}
+
+class enemy{
+	constructor(){
+	this.x = 5;
+	this.y = 6;
+	this.width = 10;
+	this.height = 20;
+	}
+	
+	show()
+	{
+		ellipse(this.x, this.y, this.width, this.height);
+		
+	}
+	
+	move(){
+		for (var i= 0; i< platArray.length; i++){
+			if(platArray[i].contains(this.x,this.y+10)){
+				this.x += 3
+			}
+		}
 	}
 }
