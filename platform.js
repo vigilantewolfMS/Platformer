@@ -21,7 +21,7 @@ function preload(){
 
 function setup(){
 	
-	createCanvas(windowWidth-50,windowHeight-10);
+	createCanvas(window.innerWidth,windowHeight-10);
 	let x = random(windowWidth);
 	let y = random(height);
 	let width = random(40,600);
@@ -29,7 +29,7 @@ function setup(){
 	jim = new Hero();
 	BuildPlatforms();
 	endgame();
-	evildood = new enemy(x,y);
+	// evildood = new enemy(x,y);
 	summoncoins();
 	
 
@@ -39,7 +39,7 @@ function setup(){
 }
 
 function summoncoins(){
-	coinnumber= random(8,10);
+	coinnumber= random(3,6);
 	coinArray = [];
 	
 	for(var i = 0;i < coinnumber; i++)
@@ -87,6 +87,7 @@ function draw(){
 	jim.show();
 	jim.move();
 	jim.touchingPlat();
+	jim.touchingCoin();
 	checkY();
 	checkX();
 	
@@ -94,16 +95,17 @@ function draw(){
 		platArray[i].show();
 		
 		if (i< 3){
-			evildood.x = platArray[i].x;
-			evildood.y = platArray[i].y;
-			evildood.show();
-			evildood.move();
+			//evildood.x = platArray[i].x;
+			//evildood.y = platArray[i].y;
+			//evildood.show();
+			//evildood.move();
 		}
 	}
 	
 		for(var i = 0;i < coinArray.length; i++)
 		{
-			coinArray[i].show();
+			coinArray[i].show;
+			
 		
 		}
 
@@ -124,6 +126,7 @@ function checkY(){
 		jim.y = 0;
 		jim.Vy = 0;
 		BuildPlatforms();
+		summoncoins();
 	}
 }
 
@@ -131,6 +134,7 @@ function checkX(){
 	if (jim.x > width){
 		jim.x = 0;
 		BuildPlatforms();
+		summoncoins();
 		counter++;
 	}
 }
@@ -167,6 +171,15 @@ class Hero{
 				return true;
 			}
 			
+		}
+	}
+	
+	touchingCoin(){
+		for (var i= 0; i < coinArray.length; i++){
+			
+			if(coinArray[i].contains(this.x,this.y)){	
+				counter++;
+			}
 		}
 	}
 	move()
@@ -235,9 +248,9 @@ class enemy{
 }
 
 class coin{
-	constructor(){
-		this.x = 50;
-		this.y = 50;
+	constructor(x, y){
+		this.x = x;
+		this.y = y;
 		this.width = 20;
 		this.height = 20;
 	}
@@ -246,5 +259,13 @@ class coin{
 	{
 		ellipse(this.x,this.y,this.width,this.height);
 	}
-	
+	contains(givenX,givenY){
+		if(givenX > this.x && givenX < this.x+this.width)
+		{
+			if(givenY>this.y && givenY< this.y + this.height){
+			return true
+			}
+		}
+		return false
+	} 
 }
